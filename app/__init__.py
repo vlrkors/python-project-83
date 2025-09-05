@@ -9,7 +9,7 @@ def create_app() -> Flask:
     app = Flask(__name__)
 
     # Basic config
-    app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY", "change-me")
+    app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
     app.config["DATABASE_URL"] = os.getenv("DATABASE_URL")
 
     # Register routes

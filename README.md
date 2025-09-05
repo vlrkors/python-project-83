@@ -31,11 +31,11 @@ make dev  # http://localhost:8000
 - Healthcheck: `GET /health` — проверяет соединение с БД (если настроена переменная `DATABASE_URL`).
 
 Переменные окружения:
-- `FLASK_SECRET_KEY` — генерируется автоматически (см. `render.yaml`).
+- `SECRET_KEY` — генерируется автоматически (см. `render.yaml`).
 - `DATABASE_URL` — автоматически прокинется из PostgreSQL-инстанса в Render.
 
 Принципы 12‑Factor:
-- Конфигурация через переменные окружения (см. `FLASK_SECRET_KEY`, `DATABASE_URL`).
+- Конфигурация через переменные окружения (см. `SECRET_KEY`, `DATABASE_URL`).
 - Порт берётся из `PORT` (см. `Procfile`/`render.yaml`).
 - Зависимости фиксируются в `requirements.txt`.
 - Локально можно использовать `.env` (загружается автоматически, не влияет на прод).
