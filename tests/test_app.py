@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import importlib
 import sys
-from typing import Generator
 
 import pytest
 from flask import Flask
@@ -41,4 +40,3 @@ def test_secret_key_loaded_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("SECRET_KEY", "super-secret-key")
     app = _reload_package()
     assert app.config.get("SECRET_KEY") == "super-secret-key"
-

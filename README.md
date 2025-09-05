@@ -66,7 +66,9 @@ make dev  # http://localhost:8000
 - `make start` — запуск в проде через Gunicorn на `$(PORT)`
 - `make lint` / `make fmt` — проверка/форматирование ruff
 - `make build` — скрипт сборки для Render (`build.sh`)
-- `make render-start` — запуск Gunicorn без `uv run` (для Render)
+- `make render-start` — кроссплатформенный старт в проде:
+  - Windows: `waitress-serve` (Gunicorn не работает на Windows)
+  - Linux/macOS/Render: `gunicorn`
 
 ## CI / Линтер
 Настроен GitHub Actions (`.github/workflows/ci.yml`) с установкой `uv` и проверкой `ruff`.
