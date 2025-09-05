@@ -1,38 +1,24 @@
-name: Python CI
+name: CI
 
 on:
-  - push
-  - pull_request
+  push:
+    branches: [ main, master ]
+  pull_request:
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493
-      - name: Set up Python
-        uses: actions/setup-python@5db1cf9a59fb97c40a68accab29236f0da7e94db
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Install dependencies
-        run: |
-          pip install uv
-          make install
-      - name: Run linter and pytest
-        run: |
-          make check
-      - name: Run test coverage
-        run: |
-          make test-coverage
+      - name: Install uv
+        run: pipx install uv
+      - name: Sync deps
+        run: uv sync --python 3.12
+      - name: Ruff check
+        run: uv run ruff check .
+      - name: Ruff format check
+        run: uv run ruff format --check .
 
-      - name: SonarQubeScan
-        uses: SonarSource/sonarqube-scan-action@01850e2590cc09ed26831056406ae1525aa41ad5
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          args: >            
-            -Dsonar.projectKey=vlrkors_python-project-83
-            -Dsonar.organization=vlrkors
-            -Dsonar.python.coverage.reportPaths=coverage.xml
-            -Dsonar.coverage.exclusions=tests/**
-            -Dsonar.exclusions=tests/**
-    

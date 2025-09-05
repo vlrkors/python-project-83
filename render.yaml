@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: python-project-83
+    env: python
+    plan: free
+    buildCommand: make build
+    startCommand: make render-start
+    autoDeploy: true
+    envVars:
+      - key: FLASK_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: python-project-83-db
+          property: connectionString
+
+  - type: postgres
+    name: python-project-83-db
+    plan: free
+    # Optional: restrict external access
+    ipAllowList: []
