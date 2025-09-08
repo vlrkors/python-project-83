@@ -1,3 +1,5 @@
+## Page Analyzer (Hexlet Project 83)
+
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/vlrkors/python-project-83/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/vlrkors/python-project-83/actions/workflows/hexlet-check.yml)
 [![CI](https://github.com/vlrkors/python-project-83/actions/workflows/ci.yml/badge.svg)](https://github.com/vlrkors/python-project-83/actions/workflows/ci.yml)
@@ -5,6 +7,30 @@
 
 [![Quality Gate](https://sonarcloud.io/api/project_badges/quality_gate?project=vlrkors_python-project-83)](https://sonarcloud.io/summary/new_code?id=vlrkors_python-project-83)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=vlrkors_python-project-83&metric=coverage)](https://sonarcloud.io/summary/new_code?id=vlrkors_python-project-83)
+
+### Демо
+- Продакшен: https://python-project-83.onrender.com
+
+### Установка и запуск (локально)
+- Предусловия: установлен Python 3.12+ и утилита `uv` (https://docs.astral.sh/uv/)
+- Установка зависимостей: `make install`
+- Запуск dev-сервера: `make dev` (по умолчанию на `http://localhost:8000`)
+
+### Проверки
+- Линтер: `make lint`
+- Форматирование: `make fmt`
+- Тесты: `uv run pytest`
+
+### Конфигурация
+- Переменные окружения загружаются из `.env` (локально) и окружения (на проде)
+- Пример `.env`: см. `.env.example` (`SECRET_KEY`, `DATABASE_URL`)
+
+### Деплой на Render
+1) Создайте аккаунт на Render и подключите GitHub репозиторий.
+2) В Render: New + → Blueprint → укажите ссылку на репозиторий (файл `render.yaml`).
+3) Подтвердите создание сервисов: Web `python-project-83` и Postgres `python-project-83-db`.
+4) Дождитесь сборки (используется `make build`) и старта (`make render-start`).
+5) Готовый домен будет формата `https://python-project-83.onrender.com` (или иной, если имя занято).
 
 
 ## Разворачивание окружения (Render)
@@ -30,7 +56,8 @@ make dev  # http://localhost:8000
 Деплой на Render через Blueprint:
 1. Создайте приватный форк/репозиторий с этим кодом и подключите его к Render.
 2. В Render: New + → Blueprint → укажите ссылку на репозиторий с `render.yaml`.
-3. Подтвердите создание сервисов: Web `python-project-83` и Postgres `python-project-83-db` (оба на Free плане).
+3. Подтвердите создание сервисов: Web `vlrkors_python-project-83` и Postgres 
+   `vlrkors_python-project-83-db` (оба на Free плане).
 4. Дождитесь сборки и запуска. Приложение будет доступно по URL сервиса.
 
 Проверки:
