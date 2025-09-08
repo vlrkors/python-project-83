@@ -1,99 +1,39 @@
 ## Page Analyzer (Hexlet Project 83)
 
-### Hexlet tests and linter status:
 [![Actions Status](https://github.com/vlrkors/python-project-83/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/vlrkors/python-project-83/actions/workflows/hexlet-check.yml)
 [![CI](https://github.com/vlrkors/python-project-83/actions/workflows/ci.yml/badge.svg)](https://github.com/vlrkors/python-project-83/actions/workflows/ci.yml)
 [![Code Style: Ruff](https://img.shields.io/badge/code%20style-ruff-46a2f1.svg)](https://docs.astral.sh/ruff/)
-
 [![Quality Gate](https://sonarcloud.io/api/project_badges/quality_gate?project=vlrkors_python-project-83)](https://sonarcloud.io/summary/new_code?id=vlrkors_python-project-83)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=vlrkors_python-project-83&metric=coverage)](https://sonarcloud.io/summary/new_code?id=vlrkors_python-project-83)
+
+Небольшое Flask‑приложение для анализа веб‑страниц (учебный проект Hexlet).
 
 ### Демо
 - Продакшен: https://python-project-83.onrender.com
 
 ### Установка и запуск (локально)
-- Предусловия: установлен Python 3.12+ и утилита `uv` (https://docs.astral.sh/uv/)
+- Требования: Python 3.12+, установленный `uv` (https://docs.astral.sh/uv/)
 - Установка зависимостей: `make install`
-- Запуск dev-сервера: `make dev` (по умолчанию на `http://localhost:8000`)
+- Запуск dev‑сервера: `make dev` (по умолчанию http://localhost:8000)
 
 ### Проверки
 - Линтер: `make lint`
 - Форматирование: `make fmt`
 - Тесты: `uv run pytest`
+- Healthcheck: `GET /health` — проверяет доступность БД (если настроена `DATABASE_URL`)
 
 ### Конфигурация
-- Переменные окружения загружаются из `.env` (локально) и окружения (на проде)
-- Пример `.env`: см. `.env.example` (`SECRET_KEY`, `DATABASE_URL`)
+- Переменные окружения подхватываются из системы и файла `.env` (локально)
+- Пример: `.env.example` (`SECRET_KEY`, `DATABASE_URL`)
 
 ### Деплой на Render
-1) Создайте аккаунт на Render и подключите GitHub репозиторий.
-2) В Render: New + → Blueprint → укажите ссылку на репозиторий (файл `render.yaml`).
-3) Подтвердите создание сервисов: Web `python-project-83` и Postgres `python-project-83-db`.
-4) Дождитесь сборки (используется `make build`) и старта (`make render-start`).
-5) Готовый домен будет формата `https://python-project-83.onrender.com` (или иной, если имя занято).
+1. Подключите репозиторий GitHub к Render (через Blueprint).
+2. В Render: New → Blueprint → укажите репозиторий с `render.yaml` (ветка `main`).
+3. Примените конфигурацию (создастся Web‑сервис и PostgreSQL).
+4. Сборка выполняет `uv sync`, запуск — `make render-start`.
 
-
-## Разворачивание окружения (Render)
-
-Базовый Flask-проект подготовлен для деплоя на Render (PaaS) с PostgreSQL.
-
-Что внутри:
-- Flask-приложение: `app/__init__.py`, маршруты в `app/routes.py`
-- WSGI-точка входа: `wsgi.py`
-- Gunicorn запускается через `Procfile`
-- Зависимости: `requirements.txt`
-- Blueprint-файл для Render: `render.yaml` (включает Web-сервис и PostgreSQL)
-- Пример переменных окружения: `.env.example`
- - Поддержка `.env` через `python-dotenv` (12‑Factor для локалки)
-
-Локальный запуск (через uv):
-```bash
-# Установите uv локально (https://docs.astral.sh/uv/)
-make install
-make dev  # http://localhost:8000
-```
-
-Деплой на Render через Blueprint:
-1. Создайте приватный форк/репозиторий с этим кодом и подключите его к Render.
-2. В Render: New + → Blueprint → укажите ссылку на репозиторий с `render.yaml`.
-3. Подтвердите создание сервисов: Web `vlrkors_python-project-83` и Postgres 
-   `vlrkors_python-project-83-db` (оба на Free плане).
-4. Дождитесь сборки и запуска. Приложение будет доступно по URL сервиса.
-
-Проверки:
-- Healthcheck: `GET /health` — проверяет соединение с БД (если настроена переменная `DATABASE_URL`).
-
-Переменные окружения:
-- `SECRET_KEY` — генерируется автоматически (см. `render.yaml`).
-- `DATABASE_URL` — автоматически прокинется из PostgreSQL-инстанса в Render.
-
-Принципы 12‑Factor:
-- Конфигурация через переменные окружения (см. `SECRET_KEY`, `DATABASE_URL`).
-- Порт берётся из `PORT` (см. `Procfile`/`render.yaml`).
-- Зависимости фиксируются в `requirements.txt`.
-- Локально можно использовать `.env` (загружается автоматически, не влияет на прод).
-
-## Структура проекта
-- Пакет приложения: `page_analyzer` — экспортирует переменную `app` на уровне пакета.
-- Основной модуль Flask: `page_analyzer/app.py`
-- Пакетное имя проекта: задаётся в `pyproject.toml` как `hexlet-code`.
-
-## Makefile команды
-- `make install` — установка зависимостей через `uv sync`
-- `make dev` — запуск Flask в debug (`flask --app page_analyzer:app`)
-- `make start` — запуск в проде через Gunicorn на `$(PORT)`
-- `make lint` / `make fmt` — проверка/форматирование ruff
-- `make build` — скрипт сборки для Render (`build.sh`)
-- `make render-start` — кроссплатформенный старт в проде:
-  - Windows: `waitress-serve` (Gunicorn не работает на Windows)
-  - Linux/macOS/Render: `gunicorn`
-
-## CI / Линтер
-Настроен GitHub Actions (`.github/workflows/ci.yml`) с установкой `uv` и проверкой `ruff`.
-
-## Деплой (Render)
-В настройках web‑сервиса:
-- Build Command: `make build`
+Параметры (из `render.yaml`):
+- Build Command: `uv sync`
 - Start Command: `make render-start`
+- Переменные окружения: `SECRET_KEY` (генерируется), `DATABASE_URL` (из базы)
 
-Продакшен URL: заполните ссылку на ваш домен Render здесь.

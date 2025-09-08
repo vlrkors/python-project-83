@@ -3,7 +3,7 @@ services:
     name: python-project-83
     env: python
     plan: free
-    buildCommand: make build
+    buildCommand: uv sync
     startCommand: make render-start
     autoDeploy: true
     envVars:
