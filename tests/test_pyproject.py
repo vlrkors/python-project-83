@@ -8,4 +8,3 @@ def test_project_name_is_hexlet_code() -> None:
         data = tomllib.load(f)
 
     assert data.get("project", {}).get("name") == "hexlet-code"
-

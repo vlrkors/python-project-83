@@ -15,6 +15,7 @@ def create_app() -> Flask:
 
     # Register routes
     from .routes import bp as routes_bp
+
     app.register_blueprint(routes_bp)
 
     @app.get("/health")
