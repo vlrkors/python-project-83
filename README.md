@@ -10,6 +10,7 @@
 
 ### Демо
 - Продакшен: https://python-project-83.onrender.com
+- Девелопмент: https://python-project-83-5kzt.onrender.com
 
 ### Установка и запуск (локально)
 - Требования: Python 3.12+, установленный `uv` (https://docs.astral.sh/uv/)
