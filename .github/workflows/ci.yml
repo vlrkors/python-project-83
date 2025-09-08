@@ -41,7 +41,7 @@ jobs:
             --cov=page_analyzer --cov=app \
             --cov-report=xml:coverage.xml
       - name: SonarQubeScan
-        uses: SonarSource/sonarqube-scan-action@01850e2590cc09ed26831056406ae1525aa41ad5
+        uses: SonarSource/sonarqube-scan-action@ea1d4918185c9bb9ac017871a389b2739436342e
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
