@@ -18,7 +18,7 @@ from page_analyzer.data_base import UrlRepository
 from page_analyzer.parser import get_data
 from page_analyzer.url_validator import normalize_url, validate_url
 
-load_dotenv(override=False)
+load_dotenv()
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
@@ -59,8 +59,7 @@ def get_url(id: int):  # noqa: A002 - route param name
     if not url_info:
         abort(404)
 
-    url_checks = repo.get_url_checks(id)
-    return render_template("url.html", url_info=url_info, url_checks=url_checks)
+    return render_template("url.html", url_info=url_info)
 
 
 @app.post("/urls/<int:id>/checks")

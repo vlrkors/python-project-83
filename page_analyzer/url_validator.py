@@ -19,4 +19,3 @@ def validate_url(url: str) -> dict[str, str]:
     if not validators.url(url):
         errors["url"] = "Некорректный формат URL"
     return errors
-

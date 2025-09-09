@@ -14,4 +14,3 @@ def get_data(response):
     result["description"] = meta_desc.get("content") if meta_desc else None
 
     return result
-

@@ -8,7 +8,7 @@ else
 RENDER_CMD = gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
 endif
 
-.PHONY: install dev start lint fmt build render-start
+.PHONY: install dev start lint fmt build render-start db-init test-db-init db-reset-test
 
 # Установка зависимостей
 install:
@@ -49,3 +49,18 @@ play:
 # Загрузка записанной сессии на asciinema.org
 upload:
 	asciinema upload page_analizer.cast
+
+# Инициализация основной БД по DATABASE_URL
+db-init:
+	@test -n "$(DATABASE_URL)" || (echo "DATABASE_URL не задан" && exit 1)
+	psql "$(DATABASE_URL)" -f database.sql
+
+# Инициализация тестовой БД по TEST_DATABASE_URL
+test-db-init:
+	@test -n "$(TEST_DATABASE_URL)" || (echo "TEST_DATABASE_URL не задан" && exit 1)
+	psql "$(TEST_DATABASE_URL)" -f database.sql
+
+# Очистка тестовой БД (truncate таблиц)
+db-reset-test:
+	@test -n "$(TEST_DATABASE_URL)" || (echo "TEST_DATABASE_URL не задан" && exit 1)
+	psql "$(TEST_DATABASE_URL)" -c "TRUNCATE url_checks RESTART IDENTITY CASCADE; TRUNCATE urls RESTART IDENTITY CASCADE;"
