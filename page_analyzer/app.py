@@ -22,7 +22,30 @@ from page_analyzer.url_validator import normalize_url, validate_url
 load_dotenv()
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+
+
+def _load_secret_key_from_file(path: str = "secret.env") -> str | None:
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            for raw in f:
+                line = raw.strip()
+                if not line or line.startswith("#"):
+                    continue
+                # Поддерживаем варианты: SECRET_KEY=val, SECRET_KEY="val", 'SECRET_KEY' = 'val'
+                for key_token in ("SECRET_KEY", "'SECRET_KEY'", '"SECRET_KEY"'):
+                    if line.startswith(key_token):
+                        _, _, rhs = line.partition("=")
+                        val = rhs.strip().strip("'\"")
+                        return val
+    except FileNotFoundError:
+        return None
+    except Exception:
+        return None
+    return None
+
+
+_secret = os.getenv("SECRET_KEY") or _load_secret_key_from_file() or "dev-secret-key"
+app.config["SECRET_KEY"] = _secret
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 
