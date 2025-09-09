@@ -24,7 +24,7 @@ load_dotenv()
 app = Flask(__name__)
 
 
-def _load_secret_key_from_file(path: str = "secret.env") -> str | None:
+def _load_secret_key_from_file(path: str = ".env") -> str | None:
     try:
         with open(path, "r", encoding="utf-8") as f:
             for raw in f:

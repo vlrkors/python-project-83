@@ -1,6 +1,10 @@
 SHELL := /bin/bash
 PORT ?= 8000
 
+# Загружаем переменные из .env, если файл существует
+-include .env
+export
+
 # Выбор сервера для продакшена в зависимости от ОС
 ifeq ($(OS),Windows_NT)
 RENDER_CMD = uv run waitress-serve --host=0.0.0.0 --port=$(PORT) page_analyzer:app
