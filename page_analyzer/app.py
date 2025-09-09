@@ -13,6 +13,7 @@ from flask import (
     request,
     url_for,
 )
+import psycopg2
 
 from page_analyzer.data_base import UrlRepository
 from page_analyzer.parser import get_data
@@ -40,22 +41,42 @@ def urls_index():
         flash("Некорректный URL", "danger")
         return render_template("index.html"), 422
 
+    if not DATABASE_URL:
+        flash("Нет подключения к БД", "danger")
+        return redirect(url_for("index"))
+
     normalized_url = normalize_url(url)
     repo = UrlRepository(DATABASE_URL)
-    existing = repo.find_url(normalized_url)
+    try:
+        existing = repo.find_url(normalized_url)
+    except Exception:  # noqa: BLE001 - показать понятное сообщение
+        flash("Нет подключения к БД", "danger")
+        return redirect(url_for("index"))
     if existing is not None:
         flash("Страница уже существует", "warning")
         return redirect(url_for("get_url", id=existing.get("id")))
 
-    new_id = repo.add_url(normalized_url)
+    try:
+        new_id = repo.add_url(normalized_url)
+    except Exception:  # noqa: BLE001
+        flash("Нет подключения к БД", "danger")
+        return redirect(url_for("index"))
     flash("Страница успешно добавлена", "success")
     return redirect(url_for("get_url", id=new_id))
 
 
 @app.get("/urls/<int:id>")
 def get_url(id: int):  # noqa: A002 - route param name
+    if not DATABASE_URL:
+        flash("Нет подключения к БД", "danger")
+        return redirect(url_for("index"))
+
     repo = UrlRepository(DATABASE_URL)
-    url_info = repo.find_id(id)
+    try:
+        url_info = repo.find_id(id)
+    except Exception:  # noqa: BLE001
+        flash("Нет подключения к БД", "danger")
+        return redirect(url_for("index"))
     if not url_info:
         abort(404)
 
@@ -64,8 +85,16 @@ def get_url(id: int):  # noqa: A002 - route param name
 
 @app.post("/urls/<int:id>/checks")
 def run_check(id: int):  # noqa: A002 - route param name
+    if not DATABASE_URL:
+        flash("Нет подключения к БД", "danger")
+        return redirect(url_for("index"))
+
     repo = UrlRepository(DATABASE_URL)
-    url_info = repo.find_id(id)
+    try:
+        url_info = repo.find_id(id)
+    except Exception:  # noqa: BLE001
+        flash("Нет подключения к БД", "danger")
+        return redirect(url_for("index"))
     if not url_info:
         abort(404)
 
@@ -78,15 +107,27 @@ def run_check(id: int):  # noqa: A002 - route param name
 
     payload = get_data(resp)
     payload["status"] = resp.status_code
-    repo.add_url_check(payload, url_info)
+    try:
+        repo.add_url_check(payload, url_info)
+    except Exception:  # noqa: BLE001
+        flash("Нет подключения к БД", "danger")
+        return redirect(url_for("index"))
     flash("Страница успешно проверена", "success")
     return redirect(url_for("get_url", id=id))
 
 
 @app.get("/urls")
 def list_urls():
+    if not DATABASE_URL:
+        flash("Нет подключения к БД", "danger")
+        return redirect(url_for("index"))
+
     repo = UrlRepository(DATABASE_URL)
-    all_urls_checks = repo.get_all_urls_checks()
+    try:
+        all_urls_checks = repo.get_all_urls_checks()
+    except Exception:  # noqa: BLE001
+        flash("Нет подключения к БД", "danger")
+        return redirect(url_for("index"))
     return render_template("urls.html", all_urls_checks=all_urls_checks)
 
 
@@ -98,3 +139,16 @@ def page_not_found(error):  # noqa: ARG001 - Flask signature
 @app.errorhandler(500)
 def server_error(error):  # noqa: ARG001 - Flask signature
     return render_template("errors/500.html"), 500
+
+
+@app.get("/health")
+def health():
+    if not DATABASE_URL:
+        return {"status": "error", "message": "DATABASE_URL is not set"}, 503
+    try:
+        with psycopg2.connect(DATABASE_URL) as conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT 1")
+        return {"status": "ok"}
+    except Exception as exc:  # noqa: BLE001
+        return {"status": "error", "message": str(exc)}, 503
