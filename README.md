@@ -45,3 +45,7 @@
 - Start Command: `make render-start`
 - Переменные окружения: `SECRET_KEY`, `DATABASE_URL`
 
+### Демо
+- Продакшен: https://python-project-83.onrender.com
+- Девелопмент: https://python-project-83-5kzt.onrender.com
+
