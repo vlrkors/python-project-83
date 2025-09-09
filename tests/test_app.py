@@ -24,16 +24,17 @@ def test_app_is_exported() -> None:
     assert isinstance(app, Flask)
 
 
-def test_root_route_returns_json() -> None:
+def test_root_route_returns_html() -> None:
     from page_analyzer import app  # type: ignore
 
     client = app.test_client()
     resp = client.get("/")
     assert resp.status_code == 200
-    assert resp.is_json
-    data = resp.get_json()
-    assert isinstance(data, dict)
-    assert data.get("message") == "Hello, Hexlet!"
+    # Step 2: root renders HTML template, not JSON
+    assert not resp.is_json
+    assert "text/html" in resp.headers.get("Content-Type", "")
+    body = resp.get_data(as_text=True)
+    assert "Анализатор страниц" in body
 
 
 def test_secret_key_loaded_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
