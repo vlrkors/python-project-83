@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import os
 
@@ -167,5 +167,3 @@ def health():
         return {"status": "ok"}
     except Exception as exc:  # noqa: BLE001
         return {"status": "error", "message": str(exc)}, 503
-
-
