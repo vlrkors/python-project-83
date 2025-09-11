@@ -31,7 +31,7 @@ def _load_secret_key_from_file(path: str = ".env") -> str | None:
                 line = raw.strip()
                 if not line or line.startswith("#"):
                     continue
-                # Поддерживаем варианты: SECRET_KEY=val, SECRET_KEY="val", 'SECRET_KEY' = 'val'
+                # Допускаем SECRET_KEY=val, SECRET_KEY="val", 'SECRET_KEY' = 'val'
                 for key_token in ("SECRET_KEY", "'SECRET_KEY'", '"SECRET_KEY"'):
                     if line.startswith(key_token):
                         _, _, rhs = line.partition("=")
@@ -65,15 +65,15 @@ def urls_index():
         return render_template("index.html"), 422
 
     if not DATABASE_URL:
-        flash("Нет подключения к БД", "danger")
+        flash("Не настроено подключение к базе", "danger")
         return redirect(url_for("index"))
 
     normalized_url = normalize_url(url)
     repo = UrlRepository(DATABASE_URL)
     try:
         existing = repo.find_url(normalized_url)
-    except Exception:  # noqa: BLE001 - показать понятное сообщение
-        flash("Нет подключения к БД", "danger")
+    except Exception:  # noqa: BLE001 - best-effort user message
+        flash("Ошибка при обращении к базе", "danger")
         return redirect(url_for("index"))
     if existing is not None:
         flash("Страница уже существует", "warning")
@@ -82,7 +82,7 @@ def urls_index():
     try:
         new_id = repo.add_url(normalized_url)
     except Exception:  # noqa: BLE001
-        flash("Нет подключения к БД", "danger")
+        flash("Ошибка при обращении к базе", "danger")
         return redirect(url_for("index"))
     flash("Страница успешно добавлена", "success")
     return redirect(url_for("get_url", id=new_id))
@@ -91,14 +91,14 @@ def urls_index():
 @app.get("/urls/<int:id>")
 def get_url(id: int):  # noqa: A002 - route param name
     if not DATABASE_URL:
-        flash("Нет подключения к БД", "danger")
+        flash("Не настроено подключение к базе", "danger")
         return redirect(url_for("index"))
 
     repo = UrlRepository(DATABASE_URL)
     try:
         url_info = repo.find_id(id)
     except Exception:  # noqa: BLE001
-        flash("Нет подключения к БД", "danger")
+        flash("Ошибка при обращении к базе", "danger")
         return redirect(url_for("index"))
     if not url_info:
         abort(404)
@@ -109,14 +109,14 @@ def get_url(id: int):  # noqa: A002 - route param name
 @app.post("/urls/<int:id>/checks")
 def run_check(id: int):  # noqa: A002 - route param name
     if not DATABASE_URL:
-        flash("Нет подключения к БД", "danger")
+        flash("Не настроено подключение к базе", "danger")
         return redirect(url_for("index"))
 
     repo = UrlRepository(DATABASE_URL)
     try:
         url_info = repo.find_id(id)
     except Exception:  # noqa: BLE001
-        flash("Нет подключения к БД", "danger")
+        flash("Ошибка при обращении к базе", "danger")
         return redirect(url_for("index"))
     if not url_info:
         abort(404)
@@ -133,7 +133,7 @@ def run_check(id: int):  # noqa: A002 - route param name
     try:
         repo.add_url_check(payload, url_info)
     except Exception:  # noqa: BLE001
-        flash("Нет подключения к БД", "danger")
+        flash("Ошибка при обращении к базе", "danger")
         return redirect(url_for("index"))
     flash("Страница успешно проверена", "success")
     return redirect(url_for("get_url", id=id))
@@ -142,14 +142,14 @@ def run_check(id: int):  # noqa: A002 - route param name
 @app.get("/urls")
 def list_urls():
     if not DATABASE_URL:
-        flash("Нет подключения к БД", "danger")
+        flash("Не настроено подключение к базе", "danger")
         return redirect(url_for("index"))
 
     repo = UrlRepository(DATABASE_URL)
     try:
         all_urls_checks = repo.get_all_urls_checks()
     except Exception:  # noqa: BLE001
-        flash("Нет подключения к БД", "danger")
+        flash("Ошибка при обращении к базе", "danger")
         return redirect(url_for("index"))
     return render_template("urls.html", all_urls_checks=all_urls_checks)
 
@@ -175,3 +175,4 @@ def health():
         return {"status": "ok"}
     except Exception as exc:  # noqa: BLE001
         return {"status": "error", "message": str(exc)}, 503
+
