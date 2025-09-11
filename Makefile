@@ -30,16 +30,6 @@ start:
 lint:
 	uv run ruff check .
 
-# Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ РєРѕРґР° СЃ РїРѕРјРѕС‰СЊСЋ ruff
-
-# Проверка только импорта (isort в ruff)
-lint-imports:
-\tuv run ruff check --select I .
-
-# Автоисправление импорта (сортировка/группировка)
-fmt-imports:
-\tuv run ruff check --select I --fix .
-
 # РЎР±РѕСЂРєР° РїСЂРѕРµРєС‚Р°
 build:
 	bash ./build.sh
