@@ -1,67 +1,75 @@
 SHELL := /bin/bash
 PORT ?= 8000
 
-# Загружаем переменные из .env, если файл существует
+# Load .env if present (does not override env)
 -include .env
 export
 
-# Выбор сервера для продакшена в зависимости от ОС
+# Cross-platform start command (Render/local)
 ifeq ($(OS),Windows_NT)
 RENDER_CMD = uv run waitress-serve --host=0.0.0.0 --port=$(PORT) page_analyzer:app
 else
 RENDER_CMD = gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
 endif
 
-.PHONY:  lint-imports fmt-imports
+.PHONY: install dev start lint fmt lint-imports fmt-imports build render-start record play upload db-init test-db-init db-reset-test
 
-# Установка зависимостей
+# Install dependencies
 install:
 	uv sync
 
-# Запуск в режиме разработки
+# Dev server
 dev:
 	uv run flask --debug --app page_analyzer:app run --port $(PORT)
 
-# Запуск приложения (продакшен)
+# Start production server locally
 start:
 	$(RENDER_CMD)
 
-# Проверка кода с помощью ruff
+# Lint
 lint:
 	uv run ruff check .
 
-# Сборка проекта
+# Format code
+fmt:
+	uv run ruff format .
+
+# Imports check only (isort via ruff)
+lint-imports:
+	uv run ruff check --select I .
+
+# Auto-fix imports (sort/group)
+fmt-imports:
+	uv run ruff check --select I --fix .
+
+# Build assets/bundle
 build:
 	bash ./build.sh
 
-# Запуск продакшен сервера
+# Start command for Render
 render-start:
 	$(RENDER_CMD)
 
-# Запись терминальной сессии с помощью asciinema
+# Asciinema helpers
 record:
 	asciinema rec page_analizer.cast
-
-# Воспроизведение записанной сессии
 play:
 	asciinema play page_analizer.cast
-
-# Загрузка записанной сессии на asciinema.org
 upload:
 	asciinema upload page_analizer.cast
 
-# Инициализация основной БД по DATABASE_URL
+# Apply schema to DATABASE_URL
 db-init:
-	@test -n "$(DATABASE_URL)" || (echo "DATABASE_URL не задан" && exit 1)
+	@test -n "$(DATABASE_URL)" || (echo "DATABASE_URL is not set" && exit 1)
 	psql "$(DATABASE_URL)" -f database.sql
 
-# Инициализация тестовой БД по TEST_DATABASE_URL
+# Apply schema to TEST_DATABASE_URL
 test-db-init:
-	@test -n "$(TEST_DATABASE_URL)" || (echo "TEST_DATABASE_URL не задан" && exit 1)
+	@test -n "$(TEST_DATABASE_URL)" || (echo "TEST_DATABASE_URL is not set" && exit 1)
 	psql "$(TEST_DATABASE_URL)" -f database.sql
 
-# Очистка тестовой БД (truncate таблиц)
+# Truncate test DB tables
 db-reset-test:
-	@test -n "$(TEST_DATABASE_URL)" || (echo "TEST_DATABASE_URL не задан" && exit 1)
+	@test -n "$(TEST_DATABASE_URL)" || (echo "TEST_DATABASE_URL is not set" && exit 1)
 	psql "$(TEST_DATABASE_URL)" -c "TRUNCATE url_checks RESTART IDENTITY CASCADE; TRUNCATE urls RESTART IDENTITY CASCADE;"
 
