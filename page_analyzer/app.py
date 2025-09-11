@@ -1,19 +1,11 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import os
 
+import psycopg2
 import requests
 from dotenv import load_dotenv
-from flask import (
-    Flask,
-    abort,
-    flash,
-    redirect,
-    render_template,
-    request,
-    url_for,
-)
-import psycopg2
+from flask import Flask, abort, flash, redirect, render_template, request, url_for
 
 from page_analyzer.data_base import UrlRepository
 from page_analyzer.parser import get_data
@@ -31,7 +23,7 @@ def _load_secret_key_from_file(path: str = ".env") -> str | None:
                 line = raw.strip()
                 if not line or line.startswith("#"):
                     continue
-                # Допускаем SECRET_KEY=val, SECRET_KEY="val", 'SECRET_KEY' = 'val'
+                # Р”РѕРїСѓСЃРєР°РµРј SECRET_KEY=val, SECRET_KEY="val", 'SECRET_KEY' = 'val'
                 for key_token in ("SECRET_KEY", "'SECRET_KEY'", '"SECRET_KEY"'):
                     if line.startswith(key_token):
                         _, _, rhs = line.partition("=")
@@ -61,11 +53,11 @@ def urls_index():
 
     errors = validate_url(url)
     if errors:
-        flash("Некорректный URL", "danger")
+        flash("РќРµРєРѕСЂСЂРµРєС‚РЅС‹Р№ URL", "danger")
         return render_template("index.html"), 422
 
     if not DATABASE_URL:
-        flash("Не настроено подключение к базе", "danger")
+        flash("РќРµ РЅР°СЃС‚СЂРѕРµРЅРѕ РїРѕРґРєР»СЋС‡РµРЅРёРµ Рє Р±Р°Р·Рµ", "danger")
         return redirect(url_for("index"))
 
     normalized_url = normalize_url(url)
@@ -73,32 +65,32 @@ def urls_index():
     try:
         existing = repo.find_url(normalized_url)
     except Exception:  # noqa: BLE001 - best-effort user message
-        flash("Ошибка при обращении к базе", "danger")
+        flash("РћС€РёР±РєР° РїСЂРё РѕР±СЂР°С‰РµРЅРёРё Рє Р±Р°Р·Рµ", "danger")
         return redirect(url_for("index"))
     if existing is not None:
-        flash("Страница уже существует", "warning")
+        flash("РЎС‚СЂР°РЅРёС†Р° СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚", "warning")
         return redirect(url_for("get_url", id=existing.get("id")))
 
     try:
         new_id = repo.add_url(normalized_url)
     except Exception:  # noqa: BLE001
-        flash("Ошибка при обращении к базе", "danger")
+        flash("РћС€РёР±РєР° РїСЂРё РѕР±СЂР°С‰РµРЅРёРё Рє Р±Р°Р·Рµ", "danger")
         return redirect(url_for("index"))
-    flash("Страница успешно добавлена", "success")
+    flash("РЎС‚СЂР°РЅРёС†Р° СѓСЃРїРµС€РЅРѕ РґРѕР±Р°РІР»РµРЅР°", "success")
     return redirect(url_for("get_url", id=new_id))
 
 
 @app.get("/urls/<int:id>")
 def get_url(id: int):  # noqa: A002 - route param name
     if not DATABASE_URL:
-        flash("Не настроено подключение к базе", "danger")
+        flash("РќРµ РЅР°СЃС‚СЂРѕРµРЅРѕ РїРѕРґРєР»СЋС‡РµРЅРёРµ Рє Р±Р°Р·Рµ", "danger")
         return redirect(url_for("index"))
 
     repo = UrlRepository(DATABASE_URL)
     try:
         url_info = repo.find_id(id)
     except Exception:  # noqa: BLE001
-        flash("Ошибка при обращении к базе", "danger")
+        flash("РћС€РёР±РєР° РїСЂРё РѕР±СЂР°С‰РµРЅРёРё Рє Р±Р°Р·Рµ", "danger")
         return redirect(url_for("index"))
     if not url_info:
         abort(404)
@@ -109,14 +101,14 @@ def get_url(id: int):  # noqa: A002 - route param name
 @app.post("/urls/<int:id>/checks")
 def run_check(id: int):  # noqa: A002 - route param name
     if not DATABASE_URL:
-        flash("Не настроено подключение к базе", "danger")
+        flash("РќРµ РЅР°СЃС‚СЂРѕРµРЅРѕ РїРѕРґРєР»СЋС‡РµРЅРёРµ Рє Р±Р°Р·Рµ", "danger")
         return redirect(url_for("index"))
 
     repo = UrlRepository(DATABASE_URL)
     try:
         url_info = repo.find_id(id)
     except Exception:  # noqa: BLE001
-        flash("Ошибка при обращении к базе", "danger")
+        flash("РћС€РёР±РєР° РїСЂРё РѕР±СЂР°С‰РµРЅРёРё Рє Р±Р°Р·Рµ", "danger")
         return redirect(url_for("index"))
     if not url_info:
         abort(404)
@@ -125,7 +117,7 @@ def run_check(id: int):  # noqa: A002 - route param name
         resp = requests.get(url_info.get("name"), timeout=0.3)
         resp.raise_for_status()
     except requests.RequestException:
-        flash("Произошла ошибка при проверке", "danger")
+        flash("РџСЂРѕРёР·РѕС€Р»Р° РѕС€РёР±РєР° РїСЂРё РїСЂРѕРІРµСЂРєРµ", "danger")
         return redirect(url_for("get_url", id=id))
 
     payload = get_data(resp)
@@ -133,23 +125,23 @@ def run_check(id: int):  # noqa: A002 - route param name
     try:
         repo.add_url_check(payload, url_info)
     except Exception:  # noqa: BLE001
-        flash("Ошибка при обращении к базе", "danger")
+        flash("РћС€РёР±РєР° РїСЂРё РѕР±СЂР°С‰РµРЅРёРё Рє Р±Р°Р·Рµ", "danger")
         return redirect(url_for("index"))
-    flash("Страница успешно проверена", "success")
+    flash("РЎС‚СЂР°РЅРёС†Р° СѓСЃРїРµС€РЅРѕ РїСЂРѕРІРµСЂРµРЅР°", "success")
     return redirect(url_for("get_url", id=id))
 
 
 @app.get("/urls")
 def list_urls():
     if not DATABASE_URL:
-        flash("Не настроено подключение к базе", "danger")
+        flash("РќРµ РЅР°СЃС‚СЂРѕРµРЅРѕ РїРѕРґРєР»СЋС‡РµРЅРёРµ Рє Р±Р°Р·Рµ", "danger")
         return redirect(url_for("index"))
 
     repo = UrlRepository(DATABASE_URL)
     try:
         all_urls_checks = repo.get_all_urls_checks()
     except Exception:  # noqa: BLE001
-        flash("Ошибка при обращении к базе", "danger")
+        flash("РћС€РёР±РєР° РїСЂРё РѕР±СЂР°С‰РµРЅРёРё Рє Р±Р°Р·Рµ", "danger")
         return redirect(url_for("index"))
     return render_template("urls.html", all_urls_checks=all_urls_checks)
 
@@ -175,4 +167,5 @@ def health():
         return {"status": "ok"}
     except Exception as exc:  # noqa: BLE001
         return {"status": "error", "message": str(exc)}, 503
+
 
