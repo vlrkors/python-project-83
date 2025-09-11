@@ -12,7 +12,7 @@ else
 RENDER_CMD = gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
 endif
 
-.PHONY: install dev start lint fmt build render-start db-init test-db-init db-reset-test
+.PHONY:  lint-imports fmt-imports
 
 # РЈСЃС‚Р°РЅРѕРІРєР° Р·Р°РІРёСЃРёРјРѕСЃС‚РµР№
 install:
@@ -31,8 +31,14 @@ lint:
 	uv run ruff check .
 
 # Р¤РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ РєРѕРґР° СЃ РїРѕРјРѕС‰СЊСЋ ruff
-fmt:
-	uv run ruff format .
+
+# Проверка только импорта (isort в ruff)
+lint-imports:
+\tuv run ruff check --select I .
+
+# Автоисправление импорта (сортировка/группировка)
+fmt-imports:
+\tuv run ruff check --select I --fix .
 
 # РЎР±РѕСЂРєР° РїСЂРѕРµРєС‚Р°
 build:
@@ -68,3 +74,4 @@ test-db-init:
 db-reset-test:
 	@test -n "$(TEST_DATABASE_URL)" || (echo "TEST_DATABASE_URL РЅРµ Р·Р°РґР°РЅ" && exit 1)
 	psql "$(TEST_DATABASE_URL)" -c "TRUNCATE url_checks RESTART IDENTITY CASCADE; TRUNCATE urls RESTART IDENTITY CASCADE;"
+
