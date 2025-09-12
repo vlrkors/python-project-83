@@ -95,7 +95,8 @@ def get_url(id: int):  # noqa: A002 - route param name
     if not url_info:
         abort(404)
 
-    return render_template("url.html", url_info=url_info)
+    url_checks = repo.get_url_checks(id)
+    return render_template("url.html", url_info=url_info, url_checks=url_checks)
 
 
 @app.post("/urls/<int:id>/checks")
@@ -112,6 +113,16 @@ def run_check(id: int):  # noqa: A002 - route param name
         return redirect(url_for("index"))
     if not url_info:
         abort(404)
+
+    # Шаг 4: базовая проверка без реального HTTP-запроса
+    payload = {}
+    try:
+        repo.add_url_check(payload, url_info)
+    except Exception:  # noqa: BLE001
+        flash("Ошибка при обращении к базе", "danger")
+        return redirect(url_for("index"))
+    flash("Страница успешно проверена", "success")
+    return redirect(url_for("get_url", id=id))
 
     try:
         resp = requests.get(url_info.get("name"), timeout=0.3)
