@@ -35,7 +35,7 @@
 - Поместить строку в `DATABASE_URL` и выполнить локально: `make db-init`.
 
 Подсказки:
-- Для подключения извне нужен именно External URL и `sslmode=require`.
+- Для подключения извне нужен External URL и `sslmode=require`.
 - Проверка: `psql "$env:DATABASE_URL" -c "SELECT 1;"` (Windows PowerShell) / `psql "$DATABASE_URL" -c "SELECT 1;"` (Linux/macOS).
 
 ### Тесты
