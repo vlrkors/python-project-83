@@ -34,10 +34,6 @@
         <thead>
           <tr>
             <th>ID</th>
-            <th>Код ответа</th>
-            <th>h1</th>
-            <th>title</th>
-            <th>description</th>
             <th>Дата проверки</th>
           </tr>
         </thead>
@@ -45,10 +41,6 @@
         <tbody>
           <tr>
             <td>{{ url_check.id }}</td>
-            <td>{{ url_check.status_code }}</td>
-            <td>{{ url_check.h1 }}</td>
-            <td>{{ url_check.title }}</td>
-            <td>{{ url_check.description }}</td>
             <td>{{ url_check.created_at }}</td>
           </tr>
         </tbody>
@@ -59,4 +51,3 @@
 </main>
 
 {% endblock %}
-

@@ -104,6 +104,8 @@ class UrlRepository:
             cur.execute(query, (url_id,))
             rows = cur.fetchall()
             for row in rows:
+                if row["status_code"] is None:
+                    row["status_code"] = ""
                 if row["h1"] is None:
                     row["h1"] = ""
                 if row["title"] is None:
