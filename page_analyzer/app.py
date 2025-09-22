@@ -3,10 +3,10 @@ from __future__ import annotations
 import os
 
 import psycopg2
+import requests
 from dotenv import load_dotenv
 from flask import Flask, abort, flash, redirect, render_template, request, url_for
 
-import requests
 from page_analyzer.data_base import UrlRepository
 from page_analyzer.parser import get_data
 from page_analyzer.url_validator import normalize_url, validate_url
