@@ -6,7 +6,9 @@ import psycopg2
 from dotenv import load_dotenv
 from flask import Flask, abort, flash, redirect, render_template, request, url_for
 
+import requests
 from page_analyzer.data_base import UrlRepository
+from page_analyzer.parser import get_data
 from page_analyzer.url_validator import normalize_url, validate_url
 
 load_dotenv()
@@ -112,8 +114,20 @@ def run_check(id: int):  # noqa: A002 - route param name
     if not url_info:
         abort(404)
 
-    # Шаг 4: сохраняем базовую проверку без реального HTTP-запроса
-    payload: dict[str, object] = {}
+    url = url_info.get("name")
+    try:
+        response = requests.get(url, timeout=10)
+    except requests.exceptions.RequestException:
+        flash("Ошибка при запросе страницы", "danger")
+        return redirect(url_for("get_url", id=id))
+
+    parsed = get_data(response)
+    payload = {
+        "status": response.status_code,
+        "h1": parsed.get("h1"),
+        "title": parsed.get("title"),
+        "description": parsed.get("description"),
+    }
     try:
         repo.add_url_check(payload, url_info)
     except Exception:  # noqa: BLE001

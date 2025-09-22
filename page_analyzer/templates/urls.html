@@ -9,6 +9,7 @@
           <tr>
             <th>ID</th>
             <th>Сайт</th>
+            <th>Дата последней проверки</th>
             <th>Код ответа</th>
           </tr>
         </thead>
@@ -18,8 +19,8 @@
             <td>{{ url.id }}</td>
             <td>
               <a href="/urls/{{ url.id }}">{{ url.name }}</a><br>
-              <small class="text-muted">{{ url.created_at }}</small>
             </td>
+            <td>{{ url.created_at }}</td>
             <td>{{ url.status_code }}</td>
           </tr>
         </tbody>

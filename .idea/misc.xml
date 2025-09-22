@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Black">
+    <option name="sdkName" value="Python 3.10 (avtonorm_disp)" />
+  </component>
+  <component name="GitLabDefaultAccount">
+    <option name="defaultAccountId" value="d4b3a704-1952-43a4-931d-79829e138b77" />
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.10 (avtonorm_disp)" project-jdk-type="Python SDK" />
+</project>

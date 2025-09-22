@@ -35,6 +35,10 @@
           <tr>
             <th>ID</th>
             <th>Дата проверки</th>
+            <th>Код ответа</th>
+            <th>H1</th>
+            <th>Title</th>
+            <th>Description</th>
           </tr>
         </thead>
         {% for url_check in url_checks %}
@@ -42,6 +46,10 @@
           <tr>
             <td>{{ url_check.id }}</td>
             <td>{{ url_check.created_at }}</td>
+            <td>{{ url_check.status_code }}</td>
+            <td>{{ url_check.h1 }}</td>
+            <td>{{ url_check.title }}</td>
+            <td>{{ url_check.description }}</td>
           </tr>
         </tbody>
         {% endfor %}

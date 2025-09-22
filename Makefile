@@ -1,6 +1,19 @@
 SHELL := /bin/bash
 PORT ?= 8000
 
+PSQL ?= $(shell command -v psql 2>/dev/null || command -v psql.exe 2>/dev/null)
+ifeq ($(OS),Windows_NT)
+  ifeq ($(strip $(PSQL)),)
+    PSQL := $(firstword \
+      $(wildcard /c/Program\ Files/PostgreSQL/*/bin/psql.exe) \
+      $(wildcard /c/Program\ Files\ (x86)/PostgreSQL/*/bin/psql.exe))
+  endif
+endif
+PSQL := $(strip $(PSQL))
+ifeq ($(PSQL),)
+$(error psql executable not found. Install PostgreSQL client or set PSQL=/path/to/psql)
+endif
+
 # Load .env if present (does not override env)
 -include .env
 export
@@ -61,15 +74,14 @@ upload:
 # Apply schema to DATABASE_URL
 db-init:
 	@test -n "$(DATABASE_URL)" || (echo "DATABASE_URL is not set" && exit 1)
-	psql "$(DATABASE_URL)" -f database.sql
+	"$(PSQL)" "$(DATABASE_URL)" -f database.sql
 
 # Apply schema to TEST_DATABASE_URL
 test-db-init:
 	@test -n "$(TEST_DATABASE_URL)" || (echo "TEST_DATABASE_URL is not set" && exit 1)
-	psql "$(TEST_DATABASE_URL)" -f database.sql
+	"$(PSQL)" "$(TEST_DATABASE_URL)" -f database.sql
 
 # Truncate test DB tables
 db-reset-test:
 	@test -n "$(TEST_DATABASE_URL)" || (echo "TEST_DATABASE_URL is not set" && exit 1)
-	psql "$(TEST_DATABASE_URL)" -c "TRUNCATE url_checks RESTART IDENTITY CASCADE; TRUNCATE urls RESTART IDENTITY CASCADE;"
-
+	"$(PSQL)" "$(TEST_DATABASE_URL)" -c "TRUNCATE url_checks RESTART IDENTITY CASCADE; TRUNCATE urls RESTART IDENTITY CASCADE;"
