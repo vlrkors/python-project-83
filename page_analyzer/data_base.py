@@ -8,7 +8,8 @@ class DatabaseConnection:
         self.conn = None
 
     def __enter__(self):
-        self.conn = psycopg2.connect(self.database_url, cursor_factory=RealDictCursor)
+        self.conn = psycopg2.connect(self.database_url,
+                                     cursor_factory=RealDictCursor)
         return self.conn.cursor()
 
     def __exit__(self, exc_type, exc_val, exc_tb):
