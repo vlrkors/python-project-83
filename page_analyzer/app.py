@@ -68,7 +68,8 @@ def urls_index():
         return redirect(url_for("index"))
 
     normalized_url = normalize_url(url)
-    repo = UrlRepository(DATABASE_URL)
+    repo_cls = _get_repository()
+    repo = repo_cls(DATABASE_URL)
     try:
         existing = repo.find_url(normalized_url)
     except Exception:  # noqa: BLE001
@@ -112,7 +113,8 @@ def run_check(id: int):  # noqa: A002 - route param name
         flash("Не настроено подключение к базе", "danger")
         return redirect(url_for("index"))
 
-    repo = UrlRepository(DATABASE_URL)
+    repo_cls = _get_repository()
+    repo = repo_cls(DATABASE_URL)
     try:
         url_info = repo.find_id(id)
     except Exception:  # noqa: BLE001
@@ -151,7 +153,8 @@ def list_urls():
         flash("Не настроено подключение к базе", "danger")
         return redirect(url_for("index"))
 
-    repo = UrlRepository(DATABASE_URL)
+    repo_cls = _get_repository()
+    repo = repo_cls(DATABASE_URL)
     try:
         all_urls_checks = repo.get_all_urls_checks()
     except Exception:  # noqa: BLE001
