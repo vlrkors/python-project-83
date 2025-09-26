@@ -7,6 +7,7 @@ import psycopg2
 import pytest
 
 from page_analyzer.data_base import UrlRepository
+from page_analyzer.url_validator import normalize_url
 
 
 def _connect(url: str):
