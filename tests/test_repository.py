@@ -109,3 +109,28 @@ def test_get_all_urls_checks_includes_urls_without_checks(test_db_url: str) -> N
     row_b = next(r for r in rows if r["id"] == b)
     assert row_b["status_code"] == ""  # normalized for None
     assert row_b["created_at"] == ""
+
+@pytest.mark.parametrize(
+    "first, second",
+    [
+        pytest.param(
+            "https://Example.com",
+            "https://example.com",
+            id="host-case-insensitive",
+        ),
+    ],
+)
+def test_repository_reuses_row_for_host_case(first: str, second: str, test_db_url: str) -> None:
+    repo = UrlRepository(test_db_url)
+    normalized_first = normalize_url(first)
+    normalized_second = normalize_url(second)
+
+    assert normalized_first == normalized_second
+
+    first_id = repo.add_url(normalized_first)
+    found = repo.find_url(normalized_second)
+    assert found is not None
+    assert found["id"] == first_id
+
+    with pytest.raises(psycopg2.IntegrityError):
+        repo.add_url(normalized_second)

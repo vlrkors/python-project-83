@@ -73,3 +73,16 @@ def test_normalize_url_expected_values(url: str, expected: str) -> None:
 )
 def test_normalize_url_distinguishes_ports(first: str, second: str) -> None:
     assert normalize_url(first) != normalize_url(second)
+
+@pytest.mark.parametrize(
+    "first, second",
+    [
+        pytest.param(
+            "https://Example.com",
+            "https://example.com",
+            id="host-case-insensitive",
+        ),
+    ],
+)
+def test_normalize_url_is_case_insensitive_for_host(first: str, second: str) -> None:
+    assert normalize_url(first) == normalize_url(second)
