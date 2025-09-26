@@ -20,7 +20,9 @@
 
 ### Переменные окружения
 - `SECRET_KEY` — секретный ключ Flask
-- `DATABASE_URL` — строка подключения к PostgreSQL (например: `postgresql://user:pass@host:5432/db?sslmode=require`)
+- `DATABASE_URL` — строка подключения к PostgreSQL
+- `TEST_DATABASE_URL` — строка подключения к тестовой БД
+- `FLASK_DEBUG` — включает режим отладки при локальной разработке
 
 Файл примера: `.env.example`.
 
