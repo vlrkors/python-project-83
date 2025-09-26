@@ -5,7 +5,10 @@ import validators
 
 def normalize_url(url: str) -> str:
     parsed = urlparse(url)
-    return f"{parsed.scheme}://{parsed.hostname}"
+    hostname = parsed.hostname or ""
+    port = parsed.port
+    netloc = hostname if port is None else f"{hostname}:{port}"
+    return f"{parsed.scheme}://{netloc}"
 
 
 def validate_url(url: str) -> dict[str, str]:
