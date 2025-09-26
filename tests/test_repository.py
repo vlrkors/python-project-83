@@ -52,7 +52,8 @@ def setup_schema(test_db_url: str) -> Iterator[None]:
 
 def test_add_and_find_url(test_db_url: str) -> None:
     repo = UrlRepository(test_db_url)
-    name = "https://example.com"
+    original = "https://example.com/index.html"
+    name = normalize_url(original)
     new_id = repo.add_url(name)
     assert isinstance(new_id, int)
     found = repo.find_url(name)
