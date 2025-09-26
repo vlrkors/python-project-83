@@ -20,5 +20,4 @@ def get_data(response):
     # Удаляем лишние пробелы и сохраняем описание в результат
     result["description"] = meta_content.strip() if meta_content is not None else None
 
-    # Возвращаем словарь с полученными данными
     return result
