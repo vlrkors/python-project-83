@@ -14,7 +14,14 @@ from page_analyzer.url_validator import normalize_url, validate_url
 load_dotenv()
 
 app = Flask(__name__)
+setattr(app, "UrlRepository", UrlRepository)
 
+
+def _get_repository() -> type[UrlRepository]:
+    """Return the repository class attached to the Flask app."""
+
+    repo_cls = getattr(app, "UrlRepository", UrlRepository)
+    return repo_cls
 
 def _load_secret_key_from_file(path: str = ".env") -> str | None:
     try:
