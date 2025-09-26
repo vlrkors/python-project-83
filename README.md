@@ -4,7 +4,8 @@
 [![CI](https://github.com/vlrkors/python-project-83/actions/workflows/ci.yml/badge.svg)](https://github.com/vlrkors/python-project-83/actions/workflows/ci.yml)
 [![Code Style: Ruff](https://img.shields.io/badge/code%20style-ruff-46a2f1.svg)](https://docs.astral.sh/ruff/)
 
-Небольшое веб‑приложение на Flask для анализа страниц сайтов (h1, title, description) и базовых SEO‑метрик. Учебный проект Hexlet (№83).
+Веб‑приложение на Flask для анализа страниц сайтов (h1, title, description) 
+и базовых SEO‑метрик. Учебный проект Hexlet (№83).
 
 ### Быстрый старт
 - `make install` — установить зависимости
