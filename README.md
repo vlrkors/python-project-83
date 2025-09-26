@@ -46,6 +46,8 @@
 ### Деплой на Render
 - Через Blueprint из `render.yaml`: создаст Web и PostgreSQL‑сервисы.
 - Build: `uv sync`, Start: `make render-start`.
+- Procfile запускает `gunicorn page_analyzer.app:app`, поэтому Render и 
+  Heroku используют один и тот же вход.
 - Переменные окружения Web‑сервиса: `SECRET_KEY`, `DATABASE_URL`.
 
 ### Полезные команды
