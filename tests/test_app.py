@@ -43,7 +43,6 @@ def test_secret_key_loaded_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
     assert app.config.get("SECRET_KEY") == "super-secret-key"
 
 
-
 @pytest.mark.parametrize(
     "first, duplicate",
     [
