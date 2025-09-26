@@ -110,6 +110,7 @@ def test_get_all_urls_checks_includes_urls_without_checks(test_db_url: str) -> N
     assert row_b["status_code"] == ""  # normalized for None
     assert row_b["created_at"] == ""
 
+
 @pytest.mark.parametrize(
     "first, second",
     [
