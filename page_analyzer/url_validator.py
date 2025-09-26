@@ -13,6 +13,7 @@ def normalize_url(url: str) -> str:
     userinfo = ""
     host_port = parsed.netloc
     if "@" in host_port:
+        # Разделяем userinfo и хост с портом
         userinfo, host_port = host_port.rsplit("@", 1)
         userinfo = f"{userinfo}@"
 
@@ -20,14 +21,18 @@ def normalize_url(url: str) -> str:
     host = host_port
     port = ""
     if host_port.startswith("["):
+        # Если адрес IPv6, ищем закрывающую скобку
         closing = host_port.find("]")
         if closing != -1:
+            # Отделяем хост и порт после IPv6-адреса
             host = host_port[: closing + 1]
-            port = host_port[closing + 1:]
+            port = host_port[closing + 1 :]
         else:
+            # Если закрывающей скобки нет, берем весь netloc как хост
             host = host_port
             port = ""
     elif ":" in host_port:
+        # Если обычный хост с портом, разделяем их
         host, port_value = host_port.split(":", 1)
         port = f":{port_value}"
 
@@ -38,10 +43,10 @@ def normalize_url(url: str) -> str:
     normalized = parsed._replace(
         scheme=scheme,
         netloc=netloc,
-        path="",
-        params="",
-        query="",
-        fragment="",
+        path="",  # Убираем путь
+        params="",  # Убираем параметры
+        query="",  # Убираем строку запроса
+        fragment="",  # Убираем фрагмент
     )
     return urlunparse(normalized)
 
