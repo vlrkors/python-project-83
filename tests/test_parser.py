@@ -71,8 +71,11 @@ from page_analyzer.parser import get_data
 	],
 )
 def test_get_data_returns_expected(html, expected):
+	# Создаем объект ответа с текстом html
 	response = types.SimpleNamespace(text=html)
 
+	# Вызываем функцию get_data для получения данных из html
 	result = get_data(response)
 
+	# Проверяем, что результат соответствует ожидаемому
 	assert result == expected
