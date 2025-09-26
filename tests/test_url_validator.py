@@ -74,6 +74,7 @@ def test_normalize_url_expected_values(url: str, expected: str) -> None:
 def test_normalize_url_distinguishes_ports(first: str, second: str) -> None:
     assert normalize_url(first) != normalize_url(second)
 
+
 @pytest.mark.parametrize(
     "first, second",
     [
