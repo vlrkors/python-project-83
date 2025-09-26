@@ -74,3 +74,32 @@ def test_get_data_returns_expected(html, expected):
     response = types.SimpleNamespace(text=html)
     result = get_data(response)
     assert result == expected
+
+
+@pytest.mark.parametrize(
+    "response, expected",
+    [
+        pytest.param(
+            types.SimpleNamespace(
+                content="""
+                <html>
+                    <head>
+                        <title>Проверка</title>
+                        <meta name='description' content='Описание страницы'>
+                    </head>
+                    <body><h1>Заголовок</h1></body>
+                </html>
+                """.strip().encode("cp1251"),
+                encoding="cp1251",
+            ),
+            {
+                "h1": "Заголовок",
+                "title": "Проверка",
+                "description": "Описание страницы",
+            },
+            id="cyrillic-bytes",
+        ),
+    ],
+)
+def test_get_data_decodes_bytes_payload(response, expected):
+    assert get_data(response) == expected
