@@ -23,6 +23,7 @@ def _get_repository() -> type[UrlRepository]:
     repo_cls = getattr(app, "UrlRepository", UrlRepository)
     return repo_cls
 
+
 def _load_secret_key_from_file(path: str = ".env") -> str | None:
     try:
         with open(path, "r", encoding="utf-8") as f:
