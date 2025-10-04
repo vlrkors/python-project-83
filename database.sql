@@ -6,7 +6,6 @@ CREATE TABLE IF NOT EXISTS urls (
 );
 
 -- Checks table: хранит проверки сайта
--- На шаге 4 заполняются базовые поля: url_id (обязателен) и created_at (по умолчанию)
 CREATE TABLE IF NOT EXISTS url_checks (
     id SERIAL PRIMARY KEY,
     url_id BIGINT REFERENCES urls (id) NOT NULL,
