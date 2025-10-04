@@ -128,7 +128,7 @@ def run_check(id: int):  # noqa: A002 - route param name
     try:
         response = requests.get(url, timeout=10)
     except requests.exceptions.RequestException:
-        flash("Ошибка при запросе страницы", "danger")
+        flash("Произошла ошибка при проверке", "danger")
         return redirect(url_for("get_url", id=id))
 
     response.encoding = response.apparent_encoding or "utf-8"
