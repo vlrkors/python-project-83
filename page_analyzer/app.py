@@ -129,8 +129,8 @@ def run_check(id: int):  # noqa: A002 - route param name
         response = requests.get(url, timeout=10)
         response.raise_for_status()
     except (
-            requests.exceptions.HTTPError,
-            requests.exceptions.RequestException,
+        requests.exceptions.HTTPError,
+        requests.exceptions.RequestException,
     ):
         flash("Произошла ошибка при проверке", "danger")
         return redirect(url_for("get_url", id=id))

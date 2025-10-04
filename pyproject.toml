@@ -1,5 +1,5 @@
 [project]
-name = "hexlet_project"
+name = "hexlet-code"
 version = "0.1.0"
 description = "Hexlet Page Analyzer — Flask app"
 readme = "README.md"
