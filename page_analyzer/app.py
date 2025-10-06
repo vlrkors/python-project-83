@@ -5,7 +5,8 @@ import os
 import psycopg2
 import requests
 from dotenv import load_dotenv
-from flask import Flask, abort, flash, redirect, render_template, request, url_for
+from flask import (Flask, abort, flash, redirect,
+                   render_template, request, url_for)
 
 from page_analyzer.data_base import UrlRepository
 from page_analyzer.parser import get_data
@@ -31,8 +32,8 @@ def _load_secret_key_from_file(path: str = ".env") -> str | None:
                 line = raw.strip()
                 if not line or line.startswith("#"):
                     continue
-                # Допускаем SECRET_KEY=val, SECRET_KEY="val", 'SECRET_KEY' = 'val'
-                for key_token in ("SECRET_KEY", "'SECRET_KEY'", '"SECRET_KEY"'):
+                for key_token in ("SECRET_KEY", "'SECRET_KEY'",
+                                  '"SECRET_KEY"'):
                     if line.startswith(key_token):
                         _, _, rhs = line.partition("=")
                         val = rhs.strip().strip("'\"")
@@ -44,7 +45,8 @@ def _load_secret_key_from_file(path: str = ".env") -> str | None:
     return None
 
 
-_secret = os.getenv("SECRET_KEY") or _load_secret_key_from_file() or "dev-secret-key"
+_secret = (os.getenv("SECRET_KEY") or _load_secret_key_from_file() or
+           "dev-secret-key")
 app.config["SECRET_KEY"] = _secret
 DATABASE_URL = os.getenv("DATABASE_URL")
 
@@ -105,7 +107,8 @@ def get_url(id: int):  # noqa: A002 - route param name
         abort(404)
 
     url_checks = repo.get_url_checks(id)
-    return render_template("url.html", url_info=url_info, url_checks=url_checks)
+    return render_template("url.html",
+                           url_info=url_info, url_checks=url_checks)
 
 
 @app.post("/urls/<int:id>/checks")
@@ -165,7 +168,8 @@ def list_urls():
     except Exception:  # noqa: BLE001
         flash("Ошибка при обращении к базе", "danger")
         return redirect(url_for("index"))
-    return render_template("urls.html", all_urls_checks=all_urls_checks)
+    return render_template("urls.html",
+                           all_urls_checks=all_urls_checks)
 
 
 @app.errorhandler(404)

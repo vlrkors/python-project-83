@@ -39,7 +39,8 @@ def normalize_url(url: str) -> str:
     # Приводим хост к нижнему регистру, сохраняя порт и учётные данные
     netloc = f"{userinfo}{host.lower()}{port}"
 
-    # Собираем нормализованный URL, оставляя только схему и сетевое расположение
+    # Собираем нормализованный URL, оставляя только схему и
+    # сетевое расположение
     normalized = parsed._replace(
         scheme=scheme,
         netloc=netloc,

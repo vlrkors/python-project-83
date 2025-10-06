@@ -21,7 +21,8 @@ def _coerce_to_text(source: Any, encoding: str) -> str:
     if text is not None:
         return text
 
-    msg = "Unsupported HTML source. Provide str, bytes, or response-like object."
+    msg = ("Unsupported HTML source. Provide str, bytes, "
+           "or response-like object.")
     raise TypeError(msg)
 
 
@@ -47,6 +48,7 @@ def get_data(response: Any) -> dict[str, str | None]:
     # если он существует
     meta_content = meta_desc.get("content") if meta_desc else None
     # Удаляем лишние пробелы и сохраняем описание в результат
-    result["description"] = meta_content.strip() if meta_content is not None else None
+    result["description"] = meta_content.strip() if meta_content is not None \
+        else None
 
     return result
