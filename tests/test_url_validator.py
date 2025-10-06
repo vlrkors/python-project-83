@@ -7,7 +7,8 @@ from types import ModuleType
 
 import pytest
 
-MODULE_PATH = Path(__file__).resolve().parents[1] / "page_analyzer" / "url_validator.py"
+MODULE_PATH = (Path(__file__).resolve().parents[1] /
+               "page_analyzer" / "url_validator.py")
 
 
 _validators_stub = ModuleType("validators")
@@ -16,7 +17,8 @@ sys.modules.setdefault("validators", _validators_stub)
 
 
 def _load_module(module_path: Path):
-    spec = importlib.util.spec_from_file_location(module_path.stem, module_path)
+    spec = importlib.util.spec_from_file_location(module_path.stem,
+                                                  module_path)
     if spec is None or spec.loader is None:  # pragma: no cover - defensive
         raise ImportError(f"Cannot load module from {module_path}")
     module = importlib.util.module_from_spec(spec)
@@ -58,7 +60,8 @@ normalize_url = _load_module(MODULE_PATH).normalize_url
         ),
     ],
 )
-def test_normalize_url_expected_values(url: str, expected: str) -> None:
+def test_normalize_url_expected_values(url: str,
+                                       expected: str) -> None:
     assert normalize_url(url) == expected
 
 
@@ -72,7 +75,8 @@ def test_normalize_url_expected_values(url: str, expected: str) -> None:
         ),
     ],
 )
-def test_normalize_url_distinguishes_ports(first: str, second: str) -> None:
+def test_normalize_url_distinguishes_ports(first: str,
+                                           second: str) -> None:
     assert normalize_url(first) != normalize_url(second)
 
 
@@ -86,5 +90,6 @@ def test_normalize_url_distinguishes_ports(first: str, second: str) -> None:
         ),
     ],
 )
-def test_normalize_url_is_case_insensitive_for_host(first: str, second: str) -> None:
+def test_normalize_url_is_case_insensitive_for_host(first: str,
+                                                    second: str) -> None:
     assert normalize_url(first) == normalize_url(second)

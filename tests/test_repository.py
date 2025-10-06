@@ -102,7 +102,8 @@ def test_get_all_urls_checks_includes_urls_without_checks(
     b = repo.add_url("https://b.example")
     # Add one check only for A
     repo.add_url_check(
-        {"status": 404, "h1": None, "title": "Not found", "description": None},
+        {"status": 404, "h1": None,
+         "title": "Not found", "description": None},
         repo.find_id(a),
     )
     rows = repo.get_all_urls_checks()

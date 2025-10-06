@@ -56,8 +56,10 @@ def test_secret_key_loaded_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
 def test_urls_index_warns_about_duplicate_host_case(
     monkeypatch: pytest.MonkeyPatch, first: str, duplicate: str
 ) -> None:
-    monkeypatch.setenv("SECRET_KEY", "integration-secret")
-    monkeypatch.setenv("DATABASE_URL", "postgresql://user:pass@localhost/testdb")
+    monkeypatch.setenv("SECRET_KEY",
+                       "integration-secret")
+    monkeypatch.setenv("DATABASE_URL",
+                       "postgresql://user:pass@localhost/testdb")
 
     app = _reload_package()
 
