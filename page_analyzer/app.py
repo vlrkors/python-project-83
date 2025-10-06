@@ -5,8 +5,8 @@ import os
 import psycopg2
 import requests
 from dotenv import load_dotenv
-from flask import (Flask, abort, flash, redirect,
-                   render_template, request, url_for)
+from flask import (Flask, abort, flash, redirect, render_template,
+                   request, url_for)
 
 from page_analyzer.data_base import UrlRepository
 from page_analyzer.parser import get_data
