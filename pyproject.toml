@@ -29,6 +29,9 @@ lint.select = [
   "E", "F", "W",  # pycodestyle/pyflakes/warnings
   "I",              # isort
 ]
+[tool.ruff.lint.isort]
+known-first-party = ["page_analyzer"]
+
 
 [tool.uv]
 dev-dependencies = [
