@@ -9,6 +9,7 @@ import pytest
 
 MODULE_PATH = Path(__file__).resolve().parents[1] / "page_analyzer" / "url_validator.py"
 
+
 _validators_stub = ModuleType("validators")
 _validators_stub.url = lambda url: True
 sys.modules.setdefault("validators", _validators_stub)

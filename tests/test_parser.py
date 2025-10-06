@@ -34,10 +34,11 @@ from page_analyzer.parser import get_data
             id="nested-tags",
         ),
         pytest.param(
-            """
-<html><head><meta name='description' content='   With surrounding spaces   '></head>
-<body></body></html>
-""",
+            (
+                "<html><head><meta name='description' "
+                "content='   With surrounding spaces   '></head>"
+                "<body></body></html>"
+            ),
             {
                 "h1": None,
                 "title": None,
@@ -46,17 +47,20 @@ from page_analyzer.parser import get_data
             id="description-strip",
         ),
         pytest.param(
-            """
-<html><head><title></title><meta name='description' content=''></head><body></body></html>
-""",
+            (
+                "<html><head><title></title>"
+                "<meta name='description' content=''></head>"
+                "<body></body></html>"
+            ),
             {"h1": None, "title": "", "description": ""},
             id="empty-values",
         ),
         pytest.param(
-            """
-<html><head><title>{title}</title><meta name='description' content='{description}'></head>
-<body><h1>{heading}</h1></body></html>
-""".format(
+            (
+                "<html><head><title>{title}</title>"
+                "<meta name='description' content='{description}'></head>"
+                "<body><h1>{heading}</h1></body></html>"
+            ).format(
                 title="T" * 300,
                 description="D" * 512,
                 heading="H" * 256,

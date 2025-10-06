@@ -43,7 +43,8 @@ def get_data(response: Any) -> dict[str, str | None]:
 
     result["h1"] = heading
     result["title"] = title
-    # Получаем содержимое атрибута content из meta description, если он существует
+    # Получаем содержимое атрибута content из meta description,
+    # если он существует
     meta_content = meta_desc.get("content") if meta_desc else None
     # Удаляем лишние пробелы и сохраняем описание в результат
     result["description"] = meta_content.strip() if meta_content is not None else None

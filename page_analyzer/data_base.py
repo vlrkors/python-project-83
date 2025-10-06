@@ -86,7 +86,11 @@ class UrlRepository:
             cur.execute(query)
             return cur.fetchall()
 
-    def add_url_check(self, data: dict[str, Any], url_info: dict[str, Any]) -> None:
+    def add_url_check(
+        self,
+        data: dict[str, Any],
+        url_info: dict[str, Any],
+    ) -> None:
         query = """
             INSERT INTO url_checks (url_id,
             status_code, h1, title, description)

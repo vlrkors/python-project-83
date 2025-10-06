@@ -94,7 +94,9 @@ def test_add_check_and_get_checks(test_db_url: str) -> None:
     assert c["created_at"] is not None
 
 
-def test_get_all_urls_checks_includes_urls_without_checks(test_db_url: str) -> None:
+def test_get_all_urls_checks_includes_urls_without_checks(
+    test_db_url: str,
+) -> None:
     repo = UrlRepository(test_db_url)
     a = repo.add_url("https://a.example")
     b = repo.add_url("https://b.example")
@@ -123,7 +125,11 @@ def test_get_all_urls_checks_includes_urls_without_checks(test_db_url: str) -> N
         ),
     ],
 )
-def test_repository_reuses_row_for_host_case(first: str, second: str, test_db_url: str) -> None:
+def test_repository_reuses_row_for_host_case(
+    first: str,
+    second: str,
+    test_db_url: str,
+) -> None:
     repo = UrlRepository(test_db_url)
     normalized_first = normalize_url(first)
     normalized_second = normalize_url(second)

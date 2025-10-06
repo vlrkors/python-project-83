@@ -100,10 +100,18 @@ def test_urls_index_warns_about_duplicate_host_case(
     monkeypatch.setattr("page_analyzer.app.UrlRepository", RepoStub)
 
     with app.test_client() as client:
-        response = client.post("/urls", data={"url": first}, follow_redirects=True)
+        response = client.post(
+            "/urls",
+            data={"url": first},
+            follow_redirects=True,
+        )
         assert response.status_code == 200
         assert "Страница успешно добавлена" in response.get_data(as_text=True)
 
-        response_dup = client.post("/urls", data={"url": duplicate}, follow_redirects=True)
+        response_dup = client.post(
+            "/urls",
+            data={"url": duplicate},
+            follow_redirects=True,
+        )
         assert response_dup.status_code == 200
         assert "Страница уже существует" in response_dup.get_data(as_text=True)
