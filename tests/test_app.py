@@ -18,13 +18,15 @@ def _reload_package() -> Flask:
     return page_analyzer.app  # type: ignore[attr-defined]
 
 
-def test_app_is_exported() -> None:
+def test_app_is_exported(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("SECRET_KEY", "test-secret")
     from page_analyzer import app  # type: ignore
 
     assert isinstance(app, Flask)
 
 
-def test_root_route_returns_html() -> None:
+def test_root_route_returns_html(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("SECRET_KEY", "test-secret")
     from page_analyzer import app  # type: ignore
 
     client = app.test_client()
