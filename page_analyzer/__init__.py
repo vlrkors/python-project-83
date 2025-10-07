@@ -1,5 +1,4 @@
-import importlib
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 try:
     import colorama
@@ -30,15 +29,10 @@ else:
         ansi_to_win32.flush = _flush  # type: ignore[attr-defined]
 
 if TYPE_CHECKING:
-    from .app import app as _app
+    from flask import Flask
 
-    app = _app
+    app: Flask
+
+from .app import app
 
 __all__ = ["app"]
-
-
-def __getattr__(name: str) -> Any:
-    if name == "app":
-        module = importlib.import_module(".app", __name__)
-        return module.app
-    raise AttributeError(f"module '{__name__}' has no attribute '{name}'")
