@@ -60,6 +60,8 @@ if not _secret:
     )
 app.config["SECRET_KEY"] = _secret
 DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_CONNECTION_NOT_CONFIGURED = "Не настроено подключение к базе"
+
 
 
 @app.get("/")
