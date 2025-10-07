@@ -20,16 +20,3 @@ jobs:
         run: uv sync --python 3.12
       - name: Ruff check
         run: uv run ruff check .
-
-      - name: SonarQubeScan
-        uses: SonarSource/sonarqube-scan-action@01850e2590cc09ed26831056406ae1525aa41ad5
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          args: >
-            -Dsonar.projectKey=vlrkors_python-project-83
-            -Dsonar.organization=vlrkors
-            -Dsonar.python.coverage.reportPaths=coverage.xml
-            -Dsonar.coverage.exclusions=tests/**
-            -Dsonar.exclusions=tests/**
-

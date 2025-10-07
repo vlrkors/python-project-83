@@ -60,7 +60,6 @@ if not _secret:
     )
 app.config["SECRET_KEY"] = _secret
 DATABASE_URL = os.getenv("DATABASE_URL")
-DATABASE_CONNECTION_NOT_CONFIGURED = "Не настроено подключение к базе"
 
 
 
@@ -107,7 +106,7 @@ def urls_index():
 @app.get("/urls/<int:id>")
 def get_url(id: int):  # noqa: A002 - route param name
     if not DATABASE_URL:
-        flash(DATABASE_CONNECTION_NOT_CONFIGURED, "danger")
+        flash("Не настроено подключение к базе", "danger")
         return redirect(url_for("index"))
 
     repo = UrlRepository(DATABASE_URL)
@@ -171,7 +170,7 @@ def run_check(id: int):  # noqa: A002 - route param name
 @app.get("/urls")
 def list_urls():
     if not DATABASE_URL:
-        flash(DATABASE_CONNECTION_NOT_CONFIGURED, "danger")
+        flash("Не настроено подключение к базе", "danger")
         return redirect(url_for("index"))
 
     repo_cls = _get_repository()

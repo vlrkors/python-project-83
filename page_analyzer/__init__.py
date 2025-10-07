@@ -1,6 +1,3 @@
-from importlib import import_module
-from typing import Any
-
 try:
     import colorama
 except ImportError:  # pragma: no cover - optional dependency
@@ -29,12 +26,6 @@ else:
 
         ansi_to_win32.flush = _flush  # type: ignore[attr-defined]
 
+from .app import app
+
 __all__ = ["app"]
-
-def __getattr__(name: str) -> Any:
-    """Отложенно загружает Flask-приложение при обращении к атрибуту."""
-
-    if name == "app":
-        module = import_module(".app", __name__)
-        return module.app
-    raise
