@@ -20,7 +20,7 @@ from flask import (
 
 from page_analyzer.data_base import UrlRepository
 from page_analyzer.parser import get_data
-from page_analyzer.url_validator import normalize_url, validate_url
+from page_analyzer.url_validator import validate_url, normalize_url
 
 load_dotenv()
 
