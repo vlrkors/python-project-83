@@ -52,8 +52,12 @@ def _load_secret_key_from_file(path: str = ".env") -> str | None:
     return None
 
 
-_secret = (os.getenv("SECRET_KEY") or _load_secret_key_from_file() or
-           "dev-secret-key")
+_secret = os.getenv("SECRET_KEY") or _load_secret_key_from_file()
+if not _secret:
+    raise RuntimeError(
+        "SECRET_KEY is not configured. "
+        "Set SECRET_KEY env or provide it in .env",
+    )
 app.config["SECRET_KEY"] = _secret
 DATABASE_URL = os.getenv("DATABASE_URL")
 
