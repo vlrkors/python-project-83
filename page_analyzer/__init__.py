@@ -1,3 +1,6 @@
+import importlib
+from typing import Any
+
 try:
     import colorama
 except ImportError:  # pragma: no cover - optional dependency
@@ -26,6 +29,12 @@ else:
 
         ansi_to_win32.flush = _flush  # type: ignore[attr-defined]
 
-from .app import app
-
 __all__ = ["app"]
+
+
+
+def __getattr__(name: str) -> Any:
+    if name == "app":
+        module = importlib.import_module(".app", __name__)
+        return module.app
+    raise AttributeError(f"module '{__name__}' has no attribute '{name}'")
