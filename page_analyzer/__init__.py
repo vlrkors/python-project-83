@@ -1,5 +1,5 @@
 import importlib
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
 try:
     import colorama
@@ -29,8 +29,12 @@ else:
 
         ansi_to_win32.flush = _flush  # type: ignore[attr-defined]
 
-__all__ = ["app"]
+if TYPE_CHECKING:
+    from .app import app as _app
 
+    app = _app
+
+__all__ = ["app"]
 
 
 def __getattr__(name: str) -> Any:
