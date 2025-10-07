@@ -4,7 +4,7 @@
 [![CI](https://github.com/vlrkors/python-project-83/actions/workflows/ci.yml/badge.svg)](https://github.com/vlrkors/python-project-83/actions/workflows/ci.yml)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/quality_gate?
 project=vlrkors_python-project-83)](https://sonarcloud.io/summary/new_code?
-id=vlrkors_python-project-50)
+id=vlrkors_python-project-83)
 [![Code Style: Ruff](https://img.shields.io/badge/code%20style-ruff-46a2f1.svg)](https://docs.astral.sh/ruff/)
 
 Веб‑приложение на Flask для анализа страниц сайтов (h1, title, description) 
