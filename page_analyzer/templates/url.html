@@ -7,17 +7,23 @@
 
     <div class="table-responsive">
       <table class="table table-bordered table-hover text-nowrap" data-test="url">
+        <thead>
+          <tr>
+            <th>Параметр</th>
+            <th>Значение</th>
+          </tr>
+        </thead>
         <tbody>
           <tr>
-            <td>ID</td>
+            <th scope="row">ID</th>
             <td>{{ url_info.id }}</td>
           </tr>
           <tr>
-            <td>Сайт</td>
+            <th scope="row">Сайт</th>
             <td>{{ url_info.name }}</td>
           </tr>
           <tr>
-            <td>Дата создания</td>
+            <th scope="row">Дата создания</th>
             <td>{{ url_info.created_at }}</td>
           </tr>
         </tbody>
