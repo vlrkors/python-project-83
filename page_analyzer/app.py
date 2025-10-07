@@ -62,7 +62,6 @@ app.config["SECRET_KEY"] = _secret
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 
-
 @app.get("/")
 def index():
     return render_template("index.html")
