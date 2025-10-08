@@ -28,4 +28,4 @@ jobs:
           args: >
             -Dsonar.projectKey=vlrkors_python-project-83
             -Dsonar.organization=vlrkors
-
+            -Dsonar.coverage.exclusions=**/*
